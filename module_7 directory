@@ -1,1 +1,83 @@
+"""
+Joshua A Aguilar
+11/26/2022
+CSD 310, Module 7.2
+Assignment: "Write four queries, in one Python file.The output from your queries should match the example below,
+including descriptions of output and format.
+The first and second query is to select all the fields for the studio and genre tables.
+The third query is to select the movie names for those movies that have a run time of less than two hours.
+The fourth query is to get a list of film names, and directors grouped by director" (Sue Sampson).
+"""
+import mysql.connector
+from mysql.connector import errorcode
 
+# create array to connect to database
+config = {
+    "user": "movies_user",
+    "password": "popcorn",
+    "host": "127.0.0.1",
+    "database": "movies",
+    "raise_on_warnings": True
+}
+try:
+    db = mysql.connector.connect(**config)
+    print("\n Database user {} connected to MySQL on host {} with database {}".format(config["user"], config["host"],
+                                                                                      config["database"]))
+    input("\n\n Press any key to continue. . .")
+    # creates new cursor connection
+    cursor = db.cursor()
+
+    # "The first and second query is to select all the fields for the studio and genre tables" (Sue Sampson).
+    query = "SELECT * from studio"  # select from studio statement stored in variable query
+    cursor.execute(query)
+    studios = cursor.fetchall()
+    print("\n--DISPLAYING Studio RECORDS--")
+    for studio in studios:
+        print("Studio ID:", studio[0])
+        print("Studio Name:", studio[1])
+        print(" ")
+
+    query = "SELECT * from genre"  # select from genre statement stored in variable query
+    cursor.execute(query)
+    genres = cursor.fetchall()
+
+    print("--DISPLAYING Genre RECORDS--")
+    for genre in genres:
+        print("Genre ID:", genre[0])
+        print("Genre Name:", genre[1])
+        print(" ")
+
+    # The third query is to select the movie names for those movies that have a run time of less than two hours.
+    query = "SELECT film_name, film_runtime from film where film_runtime < 120"
+    cursor.execute(query)
+    films = cursor.fetchall()
+    print("--DISPLAYING Short Film RECORDS--")
+    for film in films:
+        print("Film Name:", film[0])
+        print("Runtime:", film[1])
+        print(" ")
+
+    # The fourth query is to get a list of film names, and directors grouped by director
+    query = "SELECT film_name, film_director from film order by film_director"
+    cursor.execute(query)
+    films = cursor.fetchall()
+    print("--DISPLAYING Director RECORDS in Order--")
+    for director in films:
+        print("Film Name:", director[0])
+        print("Director:", director[1])
+        print(" ")
+
+    cursor.close()
+
+except mysql.connector.Error as err:
+    if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+        print("   The supplied username or password are invalid")
+
+    elif err.errno == errorcode.ER_BAD_DB_ERROR:
+        print("   The specified database does not exist")
+
+    else:
+        print(err)
+
+finally:
+    db.close()

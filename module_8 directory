@@ -1,1 +1,79 @@
+"""
+Joshua A Aguilar
+11/26/2022
+CSD 310, Module 8.2
+Assignment: "You'll be displaying selected contents of the film table multiple times, so create a python function that
+you can call with both a cursor and an output. The function should take two arguments; a cursor and a title.
+The body of the function should have a cursor that executes a select statement that selects film name as Name, film
+director as Director, genre name as Genre, and studio name as Studio. In order to get the genre name, and not id, you'll
+need an INNER JOIN. In order to get studio name, and not id, you'll need another INNER JOIN. Example: select film_name
+as Name, genre_name as Genre, studio_name as 'Studio Name' from film INNER JOIN genre ON film.genre_id=genre.genre_id
+INNER JOIN studio ON film.studio_id=studio.studio_id. In Python, if you must use more than one line for the select,
+there are a few ways to manage it. You'll have a little research to do. Next, is the cursor. fetchall() statement Format
+the output label.. Lastly, iterate over the data set and display results "(Sue Sampson).
+"""
+import mysql.connector
+from mysql.connector import errorcode
 
+config = {
+    "user": "movies_user",
+    "password": "popcorn",
+    "host": "127.0.0.1",
+    "database": "movies",
+    "raise_on_warnings": True
+}
+try:
+    db = mysql.connector.connect(**config)
+    print("\n Database user {} connected to MySQL on host {} with database {}".format(config["user"], config["host"], config["database"]))
+    input("\n\n Press any key to continue. . .")
+
+    # creates new cursor connection
+    cursor = db.cursor()
+
+    def show_films():
+        query = "SELECT film_name as Name, film_director as Director, genre_name as Genre, studio_name as 'Studio " \
+                "Name' from film INNER JOIN genre ON film.genre_id = genre.genre_id INNER JOIN studio ON " \
+                "film.studio_id = studio.studio_id "
+        cursor.execute(query)
+        films = cursor.fetchall()
+        for film in films:
+            print("Film Name: ", film[0])
+            print("Director: ", film[1])
+            print("Genre Name ID: ", film[2])
+            print("Studio Name: ", film[3])
+            print("  ")
+
+    print("\n-- DISPLAYING FILMS --")
+    show_films()
+
+    print("\n-- DISPLAYING FILMS AFTER INSERT --")
+    query = "INSERT INTO film (film_name, film_director, genre_id, studio_id, film_releaseDate, film_runtime)" \
+            "VALUES ('Star Wars', 'George Lucas', 2, 1, 1977, 121) "
+    cursor.execute(query)
+    db.commit()
+    show_films()
+
+    print("\n-- DISPLAYING FILMS AFTER UPDATE --")
+    query = "UPDATE film SET genre_id = 1 WHERE film_id = 2"
+    cursor.execute(query)
+    db.commit()
+    show_films()
+
+    print("\n-- DISPLAYING FILMS AFTER DELETE --")
+    query = "DELETE FROM film WHERE film_id = 1"
+    cursor.execute(query)
+    db.commit()
+    show_films()
+
+except mysql.connector.Error as err:
+    if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+        print("   The supplied username or password are invalid")
+
+    elif err.errno == errorcode.ER_BAD_DB_ERROR:
+        print("   The specified database does not exist")
+
+    else:
+        print(err)
+
+finally:
+    db.close()

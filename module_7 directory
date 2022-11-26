@@ -2,6 +2,7 @@
 Joshua A Aguilar
 11/26/2022
 CSD 310, Module 7.2
+movies_queries.py 
 Assignment: "Write four queries, in one Python file.The output from your queries should match the example below,
 including descriptions of output and format.
 The first and second query is to select all the fields for the studio and genre tables.

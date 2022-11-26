@@ -2,6 +2,7 @@
 Joshua A Aguilar
 11/26/2022
 CSD 310, Module 8.2
+movies_update_and_delete.py
 Assignment: "You'll be displaying selected contents of the film table multiple times, so create a python function that
 you can call with both a cursor and an output. The function should take two arguments; a cursor and a title.
 The body of the function should have a cursor that executes a select statement that selects film name as Name, film

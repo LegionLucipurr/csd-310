@@ -1,11 +1,9 @@
 """
 Team Indigo
-12/3/2022
-CSD 310, Milestone 2
-Update: bacchus_winery_insert1.4 update: fixed some syntax errors that existed
-
-Concerns: Someone please look into the management INSERT, specifically the management_list[]. I left the end date blank
-and do not know what to leave this field as.
+12/4/2022
+CSD 310, Milestone 2 Insert .py file
+Description: This .py file inserts data into the tables created by the file Bacchus_Winery_Table_Inserts.sql
+After the data has been successfully inserted into the 12 tables, the 12 tables values are then displayed.
 """
 
 import mysql.connector
